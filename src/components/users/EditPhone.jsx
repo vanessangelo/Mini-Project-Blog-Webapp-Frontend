@@ -3,8 +3,8 @@ import { Modal, Button } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import ChangePass from "../../api/changepass";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function EditPhone(props) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,10 +40,7 @@ export default function EditPhone(props) {
 
   const handleSubmit = async (values) => {
     try {
-      await ChangePass(token, {
-        currentPhone: values.currentPhone,
-        newPhone: values.newPhone,
-      });
+      await axios.patch(`https://minpro-blog.purwadhikabootcamp.com/api/auth/changePhone`, { currentPhone: values.currentPhone, newPhone: values.newPhone }, { headers: { Authorization: `Bearer : ${token}` } });
       setSuccessMessage('Phone number updated successfully.');
       setErrorMessage('');
 
@@ -97,12 +94,12 @@ export default function EditPhone(props) {
                           <div className='grid grid-flow-row gap-3 w-60'>
                             <div>
                               <label className="font-fira text-sm">Current Phone no.:</label>
-                              <Field type="text" id="currentEmail" name="currentEmail" className='border-none h-6' placeholder='Enter your current password here.' />
+                              <Field type="text" id="currentEmail" name="currentEmail" className='border-none h-6' placeholder='Enter your current number here.' />
                               <ErrorMessage name="currentEmail" component="div" className="text-red-500" />
                             </div>
                             <div>
                               <label className="font-fira text-sm">New Phone no.:</label>
-                              <Field type="text" id="newEmail" name="newEmail" className='border-none h-6' placeholder='Enter your new newEmail here.' />
+                              <Field type="text" id="newEmail" name="newEmail" className='border-none h-6' placeholder='Enter your new new number here.' />
                               <ErrorMessage name="newEmail" component="div" className="text-red-500" />
                             </div>
                           </div>

@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AllCategories from "../../api/allcategories";
-import Blog from "../../api/blog";  
+import Blog from "../../api/blog";
 import { Link } from "react-router-dom";
 import { Pagination } from "flowbite-react";
 
-export default function BlogLanding () {    
+export default function BlogLanding() {
 
-    const [ filter, setFilter ] = useState({
+    const [filter, setFilter] = useState({
         search: "",
         id_cat: "",
         sort: ""
     });
 
     const handleInput = (e) => {
-        const copyFilter = {...filter};
+        const copyFilter = { ...filter };
         copyFilter.search = e.target.value;
         setFilter(copyFilter);
     }
 
     const handleCategory = (id) => {
-        const copyFilter = {...filter};
+        const copyFilter = { ...filter };
         copyFilter.id_cat = id + "";
         setFilter(copyFilter);
     }
 
     const handleSort = (param) => {
-        const copyFilter = {...filter};
+        const copyFilter = { ...filter };
         copyFilter.sort = param;
         setFilter(copyFilter);
     }
@@ -34,33 +34,31 @@ export default function BlogLanding () {
     const buttonFilterBlog = (e) => {
         e.preventDefault()
         const temptData = {}
-        if(filter.search) {
+        if (filter.search) {
             temptData.search = filter.search
         }
-        if(filter.id_cat) {
+        if (filter.id_cat) {
             temptData.id_cat = filter.id_cat
         }
-        if(filter.sort) {
+        if (filter.sort) {
             temptData.sort = filter.sort
         }
-        console.log(temptData, filter)
 
         const params = new URLSearchParams(temptData);
         const paramsStr = params.toString();
         const baseURL = "https://minpro-blog.purwadhikabootcamp.com/api/blog"
 
         axios.get(`${baseURL}?${paramsStr}`)
-        .then((response) => {
-            console.log(response);
-            setAllBlog(response.data.result);
-        })
-        .catch((err) => console.log(err));
+            .then((response) => {
+                setAllBlog(response.data.result);
+            })
+            .catch((err) => console.log(err));
     }
 
     // for searchfilter 
-    const [ isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [ isDropdownOpen2, setIsDropdownOpen2] = useState(false);
-    const [ allCategory, setAllCategory] = useState([])
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
+    const [allCategory, setAllCategory] = useState([])
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -73,14 +71,14 @@ export default function BlogLanding () {
     const closeDropdowns = () => {
         setIsDropdownOpen(false);
         setIsDropdownOpen2(false);
-      };
+    };
 
     useEffect(() => {
         AllCategories()
-        .then((resp) => {
-            setAllCategory(resp.data);
-        })
-        .catch((err) => console.log(err))
+            .then((resp) => {
+                setAllCategory(resp.data);
+            })
+            .catch((err) => console.log(err))
     }, [])
 
     //pagination
@@ -90,33 +88,33 @@ export default function BlogLanding () {
     const fetchData = async (page) => {
         try {
             const response = await axios.get(
-            `https://minpro-blog.purwadhikabootcamp.com/api/blog?page=${page}`
+                `https://minpro-blog.purwadhikabootcamp.com/api/blog?page=${page}`
             );
             const { rows, result: blogData } = response.data;
             setCurrentPage(page);
-            setTotalPages(Math.ceil(rows/8));
+            setTotalPages(Math.ceil(rows / 8));
             setAllBlog(blogData);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-        };
+    };
 
     const onPageChange = (page) => {
         if (page != currentPage) {
             fetchData(page)
         }
-        };
+    };
 
     // for cardbloglanding
-    const [ allBlog, setAllBlog ] = useState([])
+    const [allBlog, setAllBlog] = useState([])
 
-    useEffect (() => {
+    useEffect(() => {
         Blog()
-        .then((response) => {
-            setAllBlog(response.data.result);
-            setTotalPages(Math.ceil(response.data.rows/8));
-        })
-        .catch((err) => console.log(err)); 
+            .then((response) => {
+                setAllBlog(response.data.result);
+                setTotalPages(Math.ceil(response.data.rows / 8));
+            })
+            .catch((err) => console.log(err));
     }, [])
 
 
@@ -138,9 +136,9 @@ export default function BlogLanding () {
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
                                         {allCategory.map((result) => {
                                             return (
-                                            <li>
-                                                <button type="button" onClick={() => {handleCategory(result.id); closeDropdowns()} } className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{result.name}</button>
-                                            </li>
+                                                <li>
+                                                    <button type="button" onClick={() => { handleCategory(result.id); closeDropdowns() }} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{result.name}</button>
+                                                </li>
                                             )
                                         })}
                                     </ul>
@@ -156,10 +154,10 @@ export default function BlogLanding () {
                                 <div id="dropdown" className={`z-10 absolute left-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700 ${isDropdownOpen2 ? 'block' : 'hidden'}`}>
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
                                         <li>
-                                            <button type="button" onClick={() => {handleSort("ASC"); closeDropdowns()}} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ascending</button>
+                                            <button type="button" onClick={() => { handleSort("ASC"); closeDropdowns() }} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ascending</button>
                                         </li>
                                         <li>
-                                            <button type="button" onClick={() => {handleSort("DESC"); closeDropdowns()}} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Descending</button>
+                                            <button type="button" onClick={() => { handleSort("DESC"); closeDropdowns() }} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Descending</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -182,59 +180,59 @@ export default function BlogLanding () {
                 <div className="mb-4">
                     <div> {/* ini cardbloglanding */}
                         {allBlog.map((result) => (
-                        <div className="w-full grid grid-flow-row content-center">
-                            <div className="bg-ivory w-[53rem] h-[180px] m-2 rounded-lg shadow-lg flex gap-2 hover:bg-white ml-[0.90rem]">
-                                <div className="grid-flow-col content-center">
-                                    <div className="w-[12rem] h-[180px]">
-                                        <img className="w-[200px] h-[180px] object-cover rounded-tl-lg rounded-bl-lg"
-                                            src={`https://minpro-blog.purwadhikabootcamp.com/${result.imageURL}`}
-                                            alt="image not found" />
+                            <div className="w-full grid grid-flow-row content-center">
+                                <div className="bg-ivory w-[53rem] h-[180px] m-2 rounded-lg shadow-lg flex gap-2 hover:bg-white ml-[0.90rem]">
+                                    <div className="grid-flow-col content-center">
+                                        <div className="w-[12rem] h-[180px]">
+                                            <img className="w-[200px] h-[180px] object-cover rounded-tl-lg rounded-bl-lg"
+                                                src={`https://minpro-blog.purwadhikabootcamp.com/${result.imageURL}`}
+                                                alt="image not found" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex flex-col justify-center w-[45rem]">
-                                    <div className="grid grid-flow-row">
-                                        <div className="flex gap-2 justify-between basis-1/4">
-                                            <div className="top-[825px] w-28">
-                                                <p className="font-fira text-left text-lg underline decoration-2 text-darkcho">{result.Category.name}</p>
-                                            </div>
-                                            <div className="p-[4px] mr-1">
-                                                <div className="w-5 h-5 rounded-full overflow-hidden"> 
-                                                <img className="w-full h-full"
-                                                src={`https://minpro-blog.purwadhikabootcamp.com/${result.User.imgProfile}`}
-                                                alt="x" />
+                                    <div className="flex flex-col justify-center w-[45rem]">
+                                        <div className="grid grid-flow-row">
+                                            <div className="flex gap-2 justify-between basis-1/4">
+                                                <div className="top-[825px] w-28">
+                                                    <p className="font-fira text-left text-lg underline decoration-2 text-darkcho">{result.Category.name}</p>
+                                                </div>
+                                                <div className="p-[4px] mr-1">
+                                                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                                                        <img className="w-full h-full"
+                                                            src={`https://minpro-blog.purwadhikabootcamp.com/${result.User.imgProfile}`}
+                                                            alt="x" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="basis-2/4 h-32 grid content-end">
-                                            <Link to={`/post/${result.id}`}>
-                                                <div className="text-left text-3xl font-libre font-extrabold text-darkcho hover:underline">{result.title}</div>
-                                            </Link>
-                                        </div>
-                                        <div className="basis-1/4 flex gap-1 justify-end">
-                                            <div>
-                                                <p className="text-xs pt-1 text-darkcho font-bold"></p>
+                                            <div className="basis-2/4 h-32 grid content-end">
+                                                <Link to={`/post/${result.id}`}>
+                                                    <div className="text-left text-3xl font-libre font-extrabold text-darkcho hover:underline">{result.title}</div>
+                                                </Link>
                                             </div>
-                                            <div>
-                                            <Link to="/login">
-                                                <i className='bx bxs-heart mr-[10px]' style={{color:"#1D0D0C"}} ></i>
-                                            </Link>
+                                            <div className="basis-1/4 flex gap-1 justify-end">
+                                                <div>
+                                                    <p className="text-xs pt-1 text-darkcho font-bold"></p>
+                                                </div>
+                                                <div>
+                                                    <Link to="/login">
+                                                        <i className='bx bxs-heart mr-[10px]' style={{ color: "#1D0D0C" }} ></i>
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         )
                         )}
                     </div>
                     <div className="m-4">
-                    <Pagination
-                    currentPage={currentPage}
-                    onPageChange={onPageChange}
-                    showIcons={true}
-                    totalPages={totalPages}
-                    className=""
-                    />
+                        <Pagination
+                            currentPage={currentPage}
+                            onPageChange={onPageChange}
+                            showIcons={true}
+                            totalPages={totalPages}
+                            className=""
+                        />
                     </div>
                 </div>
             </div>

@@ -3,8 +3,8 @@ import { Modal, Button } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import ChangePass from "../../api/changepass";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function EditUsername(props) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,10 +38,7 @@ export default function EditUsername(props) {
 
   const handleSubmit = async (values) => {
     try {
-      await ChangePass(token, {
-        currentUsername: values.currentUsername,
-        newUsername: values.newUsername,
-      });
+      await axios.patch(`https://minpro-blog.purwadhikabootcamp.com/api/auth/changeUsername`, { currentUsername: values.currentUsername, newUsername: values.newUsername }, { headers: { Authorization: `Bearer : ${token}` } })
       setSuccessMessage('Username updated successfully.');
       setErrorMessage('');
 
@@ -95,12 +92,12 @@ export default function EditUsername(props) {
                           <div className='grid grid-flow-row gap-3 w-60'>
                             <div>
                               <label className="font-fira text-sm">Current Username:</label>
-                              <Field type="text" id="currentUsername" name="currentUsername" className='border-none h-6' placeholder='Enter your current password here.' />
+                              <Field type="text" id="currentUsername" name="currentUsername" className='border-none h-6' placeholder='Enter your current username here.' />
                               <ErrorMessage name="currentUsername" component="div" className="text-red-500" />
                             </div>
                             <div>
                               <label className="font-fira text-sm">New Username:</label>
-                              <Field type="text" id="newUsername" name="newUsername" className='border-none h-6' placeholder='Enter your new newUsername here.' />
+                              <Field type="text" id="newUsername" name="newUsername" className='border-none h-6' placeholder='Enter your new new username here.' />
                               <ErrorMessage name="newUsername" component="div" className="text-red-500" />
                             </div>
                           </div>

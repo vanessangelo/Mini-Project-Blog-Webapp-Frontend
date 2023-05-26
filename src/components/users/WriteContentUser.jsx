@@ -14,10 +14,10 @@ export default function WriteContentUser() {
 
   useEffect(() => {
     AllCategories()
-    .then((resp) => {
+      .then((resp) => {
         setAllCategory(resp.data);
-    })
-    .catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err))
   }, [])
 
   // Handle form submission
@@ -35,6 +35,7 @@ export default function WriteContentUser() {
         });
     } catch (err) {
       setErrMsg("Error occurs during submission. Please try again later.");
+      alert(errMsg);
     }
   };
 
@@ -79,9 +80,9 @@ export default function WriteContentUser() {
         <div className="box w-[44rem] bg-sage m-auto p-6 rounded flex flex-col">
           <form onSubmit={formik.handleSubmit}>
             <div className="img upload">
-                <div className="font-fira text-sm pb-1">Upload your image here:</div>
-                    <input type="file" id="image" name="image" onChange={handleFile} className='rounded-lg' required/>
-                </div>
+              <div className="font-fira text-sm pb-1">Upload your image here:</div>
+              <input type="file" id="image" name="image" onChange={handleFile} className='rounded-lg' required />
+            </div>
             <div className="title grid my-4">
               <label htmlFor="title" className="font-fira text-sm">Title:</label>
               <input
@@ -118,10 +119,10 @@ export default function WriteContentUser() {
                 className="py-1 px-4 border-none border-olive border-2 rounded-lg">
                 <option>All Categories</option>
                 {allCategory.map((post) => (
-                        <option value={post.id} key={post.id}>
-                          {post.name}
-                        </option>
-                    ))}
+                  <option value={post.id} key={post.id}>
+                    {post.name}
+                  </option>
+                ))}
               </select>
               {formik.errors.CategoryId && (
                 <div className="error font-libre text-xs text-red-500">{formik.errors.CategoryId}</div>
