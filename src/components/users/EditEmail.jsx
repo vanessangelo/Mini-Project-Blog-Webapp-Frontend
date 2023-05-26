@@ -1,103 +1,132 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "flowbite-react";
-import axios from "axios";
 import { useSelector } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import ChangePass from "../../api/changepass";
+import { useNavigate } from "react-router-dom";
 
-// should recheck on the state and the API application
 export default function EditEmail(props) {
-//   const [newName, setNewName] = useState(null); // change
-    const [modalOpen, setModalOpen] = useState(false);
-//   const [username, setUsername] = useState() // account
+  const [modalOpen, setModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
-//   const token = useSelector((state) => state.auth.token)
+  const token = useSelector((state) => state.auth.token)
 
-//   //export Username
-//   useEffect(() => {
-//     if(!token) {
-//         return;
-//     }
-//     profile(token)
-//     .then(resp => {
-//         setUsername(resp.data)
-//     }) 
-//     }, [token])
+  // handle open modal
+  const handleToggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
-    const handleToggleModal = () => {
-        setModalOpen(!modalOpen);
-    };
+  // handle close modal
+  const handleCloseModal = () => {
+    setModalOpen(false);
 
-    const handleCloseModal = () => {
-        setModalOpen(false);
-    };
+  };
 
-//   const handleFileChange = (event) => {
-//     const file = event.target.files[0];
-//     setNewPic(file);
-//   };
+  // yup validation
+  const validationSchema = Yup.object().shape({
+    currentEmail: Yup.string().email().required("fill this in"),
+    newEmail: Yup.string().email().required("fill this in"),
+  });
 
-//   const handleSave = () => {
-//     if (newName) {
-//       const formData = new FormData();
-//       formData.append("file", newPic);
+  const initialValues = {
+    currentEmail: "",
+    newEmail: "",
+  }
 
-//       axios
-//         .post("https://minpro-blog.purwadhikabootcamp.com/api/profile/single-uploaded", formData, { headers: {Authorization: `Bearer ${token}`}})
-//         .then((response) => {
-//           console.log(`Profile picture updated successfully. ${response}`);
-//           setProfPic(newPic)
-//         })
-//         .catch((error) => {
-//           console.error("Error updating profile picture:", error);
-//         })
-//         .finally(() => {
-//           props.onSaveImg()
-//           handleCloseModal();
-//         });
-//     }
-//   };
+  const handleSubmit = async (values) => {
+    try {
+      await ChangePass(token, {
+        currentEmail: values.currentEmail,
+        newEmail: values.newEmail,
+      });
+      setSuccessMessage('Email updated successfully.');
+      setErrorMessage('');
+
+      setTimeout(() => {
+        navigate("/login")
+      }, 3000)
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data);
+      } else {
+        setErrorMessage('An error occurred. Please try again.');
+      }
+      setSuccessMessage('');
+    }
+  };
 
   return (
     <>
-    <div className="flex justify-around w-[48.5rem]">
-      <div className="bg-ivory h-20 img div wrapper w-[30rem] flex flex-col justify-center pl-10">
-            <div className="title font-libre text-sm font-semibold">
-                Email:
+      <div className="flex justify-around w-[48.5rem]">
+        <div className="bg-ivory h-20 img div wrapper w-[30rem] flex flex-col justify-center pl-10 rounded-b-lg">
+          <div className="title font-libre text-sm font-semibold">
+            Email:
+          </div>
+          <div className="content font-fira pl-8 text-lg">
+            <div className="w-fit bg-olive px-2 rounded-lg text-ivory">
+              vanessagreenangelo@gmail.com
             </div>
-            <div className="content font-fira pl-8 text-lg">
-                <div className="w-fit bg-olive px-2 rounded-lg text-ivory">
-                    vanessagreenangelo@gmail.com
-                </div>
-            </div>
-      </div>
-      <div>
-        <div className="h-20 grid content-center">
-            <Button onClick={handleToggleModal} className="bg-gray-400 hover:bg-olive">
-            <i className="bx bxs-pencil m-0" style={{ color: "#ffffff" }}></i>
-            </Button>
+          </div>
         </div>
-        <Modal show={modalOpen} size="md" popup={true} onClose={handleCloseModal}>
-          <Modal.Header />
-          <Modal.Body>
-            <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-              <h3 className="text-xl font-monts font-medium text-gray-900 dark:text-white">
-                Profile Picture
-              </h3>
-            <div>
-                <div className="mb-2 block">
-                    <span>Upload your new profile picture here!</span>
+        <div>
+          <div className="h-20 grid content-center">
+            <Button onClick={handleToggleModal} className="bg-gray-400 hover:bg-olive">
+              <i className="bx bxs-pencil m-0" style={{ color: "#ffffff" }}></i>
+            </Button>
+          </div>
+          <Modal show={modalOpen} size="md" popup={true} onClose={handleCloseModal}>
+            <Modal.Header />
+            <Modal.Body>
+              <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+                <h3 className="text-xl font-monts font-medium text-gray-900 dark:text-white">
+                  Email
+                </h3>
+                <div>
+                  <div className="mb-2 block">
+                    <span>Change your email here!</span>
+                  </div>
+                  <div>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+                      <Form>
+                        <div className='grid grid-flow-row gap-1 justify-center'>
+                          <div className='grid grid-flow-row gap-3 w-60'>
+                            <div>
+                              <label className="font-fira text-sm">Current Email:</label>
+                              <Field type="text" id="currentEmail" name="currentEmail" className='border-none h-6' placeholder='Enter your current password here.' />
+                              <ErrorMessage name="currentEmail" component="div" className="text-red-500" />
+                            </div>
+                            <div>
+                              <label className="font-fira text-sm">New Email:</label>
+                              <Field type="text" id="newEmail" name="newEmail" className='border-none h-6' placeholder='Enter your new newEmail here.' />
+                              <ErrorMessage name="newEmail" component="div" className="text-red-500" />
+                            </div>
+                          </div>
+                          <div className="text-sm font-medium text-gray-500 dark:text-gray-300 pt-4">
+                            <button
+                              type="submit"
+                              className="bg-sage hover:bg-olive text-black hover:text-white hover:font-bold w-14 mr-2 text-center rounded"
+                            >
+                              Update
+                            </button>
+                            {successMessage && <div className="text-green-500 mt-2">{successMessage}</div>}
+                            {errorMessage && <div className="text-red-500 mt-2">{errorMessage}</div>}
+                            <button onClick={handleCloseModal} className="bg-sage hover:bg-olive text-black hover:text-white hover:font-bold w-14 text-center rounded">
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </Form>
+                    </Formik>
+                  </div>
                 </div>
-                {/* onChange={handleFileChange} */}
-                <input type="file" className="text-sm" />
-            </div>
-            <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                <button onClick={true} className="bg-sage hover:bg-olive text-black hover:text-white hover:font-bold w-14 mr-2 text-center rounded">Save</button>
-                <button onClick={handleCloseModal} className="bg-sage hover:bg-olive text-black hover:text-white hover:font-bold w-14 text-center rounded">Cancel</button>
               </div>
-            </div>
-          </Modal.Body>
-        </Modal>
+            </Modal.Body>
+          </Modal>
+        </div>
       </div>
-    </div>
     </>
   );
 }

@@ -22,14 +22,17 @@ export default function LogIn() {
     confirmPassword: '',
   };
 
+  const validRgx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+  const pwdRgx = /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[-_+=!@#$%^&])(?=.{8,})/;
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Please use a valid email format').required('Email is required'),
     username: Yup.string().required('Username is required'),
     phone: Yup.number().positive("Can't start with a minus").integer(
-        "Can't include a decimal point"
-      ).required('Phone is required'),
-    password: Yup.string().matches(/^(?=.*[A-Z])(?=.*\W)(?=.*\d)[a-zA-Z0-9\W]{6,}$/,
-      'At least 6 characters, 1 symbol, and 1 capital letter'
+      "Can't include a decimal point"
+    ).required('Phone is required').matches(validRgx, "Phone number is not valid"),
+    password: Yup.string().matches(pwdRgx, 'At least 6 characters, 1 symbol, and 1 capital letter'
     ).required('Password is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -70,7 +73,7 @@ export default function LogIn() {
                   <div className='grid grid-flow-row gap-1 justify-center'>
                     <h3 className='font-monts font-bold text-xl text-center text-darkcho m-4'>WELCOME!</h3>
                     <div className='grid grid-flow-row gap-3 w-60'>
-                    {status && status.success && (
+                      {status && status.success && (
                         <p className="text-center text-green-500">{status.message}</p>
                       )}
                       <ErrorMessage name='username' component='div' className='text-red-500 text-xs' />
@@ -95,7 +98,7 @@ export default function LogIn() {
                       />
                     </div>
                     <div className='grid grid-flow-col justify-start'>
-                        <button onClick={togglePassword} className='m-1'><span className='flex content-center h-5'><VscEye className='m-1'/>Show Password</span></button>
+                      <button onClick={togglePassword} className='m-1'><span className='flex content-center h-5'><VscEye className='m-1' />Show Password</span></button>
                     </div>
                     <button
                       className='w-full py-2 my-4 bg-olive text-ivory hover:bg-sage hover:text-black hover:font-bold'
