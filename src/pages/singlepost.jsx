@@ -3,34 +3,34 @@ import { Link, useParams } from "react-router-dom"
 import { OneBlog } from "../api/blog";
 import NavBar from "../components/guests/Navbar";
 
-export default function SinglePost () {
+export default function SinglePost() {
     const [post, setPost] = useState([]);
 
-    useEffect (() => {
+    useEffect(() => {
         OneBlog(postId)
-        .then((res) => {
-            setPost(res.data[0])
-        })
+            .then((res) => {
+                setPost(res.data[0])
+            })
     }, [])
 
-    if(post == []){
+    if (post == []) {
         return <p>LOADING</p>
     }
-    
-    const {postId} = useParams()
+
+    const { postId } = useParams()
 
     return (
         <>
-        <div className="sticky top-0 z-50">
-            <NavBar />
-        </div>
-            <div className="w-full h-[45rem]"> 
+            <div className="sticky top-0 z-50">
+                <NavBar />
+            </div>
+            <div className="w-full h-[45rem]">
                 <div className="p-2 px-20 h-[40rem] flex flex-col">
                     <div className="img desc flex h-[20rem] ">
                         <div className="img basis-1/3">
                             <div className="w-[32rem] h-[19rem] m-2 shadow-lg shadow-darkcho rounded-lg">
                                 <img className="w-full h-full object-cover rounded-lg"
-                                    src={"../src/assets/IMG_2419.JPG"}
+                                    src={`https://minpro-blog.purwadhikabootcamp.com/${post.imageURL}`}
                                     alt="img" />
                             </div>
                         </div>
@@ -58,10 +58,10 @@ export default function SinglePost () {
                                 </div>
                                 <div className="profpic, username, likes flex justify-between py-2">
                                     <div className="flex gap-1 justify-end px-1 pt-[1.5px]">
-                                        <div className="w-5 h-5 rounded-full overflow-hidden"> 
-                                        <img className="w-full h-full"
-                                        src={`https://minpro-blog.purwadhikabootcamp.com/${post?.User?.imgProfile}`}
-                                        alt="x" />
+                                        <div className="w-5 h-5 rounded-full overflow-hidden">
+                                            <img className="w-full h-full"
+                                                src={`https://minpro-blog.purwadhikabootcamp.com/${post?.User?.imgProfile}`}
+                                                alt="x" />
                                         </div>
                                         <div className="font-fira text-sm text-gray-500 mx-1">
                                             {post?.User?.username}
@@ -83,7 +83,7 @@ export default function SinglePost () {
                     </div>
                     <div className="content h-[30rem]">
                         <div className="my-4 mx-40 font-libre font-semibold indent-12 text-justify">
-                        {post.content}
+                            {post.content}
                         </div>
                     </div>
                 </div>
