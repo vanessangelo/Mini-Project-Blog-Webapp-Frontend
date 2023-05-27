@@ -9,6 +9,11 @@ export default function NavBarUser() {
 
     const token = useSelector((state) => state.auth.token)
 
+    useEffect(() => {
+        profile(token)
+            .then((res) => setUsername(res.data.username))
+    })
+
     return (
         <div className="w-full">
             <div className="mr-2 pr-5">
@@ -18,13 +23,8 @@ export default function NavBarUser() {
                             <p className="text-sm text-left">
                                 WELCOME,
                             </p>
-                            <p className="text-sm bg-sage mt-2 px-2">
-                                <p className="text-sm bg-sage">
-                                    hope you are having
-                                </p>
-                                <p className="text-sm bg-sage">
-                                    a great day!
-                                </p>
+                            <p className="text-lg bg-sage mt-2 px-2 rounded-sm">
+                                {username}!
                             </p>
                         </div>
                         <div className="grid grid-flow-row gap-1 justify-center">

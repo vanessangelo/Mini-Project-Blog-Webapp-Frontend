@@ -64,7 +64,7 @@ export default function EditEmail(props) {
           </div>
           <div className="content font-fira pl-8 text-lg">
             <div className="w-fit bg-olive px-2 rounded-lg text-ivory">
-              vanessagreenangelo@gmail.com
+              {props.oldProfile}
             </div>
           </div>
         </div>

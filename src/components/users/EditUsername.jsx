@@ -64,7 +64,7 @@ export default function EditUsername(props) {
           </div>
           <div className="content font-fira pl-8 text-lg">
             <div className="w-fit bg-olive px-2 rounded-lg text-ivory">
-              vanessaa
+              {props.oldProfile}
             </div>
           </div>
         </div>

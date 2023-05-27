@@ -66,7 +66,7 @@ export default function EditPhone(props) {
           </div>
           <div className="content font-fira pl-8 text-lg">
             <div className="w-fit bg-olive px-2 rounded-lg text-ivory">
-              08775746533
+              {props.oldProfile}
             </div>
           </div>
         </div>

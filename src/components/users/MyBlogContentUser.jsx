@@ -22,11 +22,6 @@ export default function MyBlogContentUser() {
             })
     }, [token])
 
-
-    if (myBlog.length == 0) {
-        return <p>LOADING</p>
-    }
-
     const handleDelete = (id) => {
         axios.patch(`https://minpro-blog.purwadhikabootcamp.com/api/blog/remove/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -106,7 +101,7 @@ export default function MyBlogContentUser() {
                     <div>
                         {likedBlog.map((result) => (
                             <div key={result.id} className="w-[48rem] grid grid-flow-row content-center">
-                                <div className="bg-ivory w-[45rem] h-fit m-2 rounded-lg shadow-lg flex gap-2 hover:bg-white ml-[0.90rem]">
+                                <div className="bg-ivory w-[45rem] h-fit m-2 rounded-lg shadow-lg flex gap-2 hover:bg-white ml-[0.90rem] p-2">
                                     <div className="grid-flow-col content-center">
                                     </div>
                                     <div className="flex flex-col justify-center w-[45rem]">
@@ -119,7 +114,7 @@ export default function MyBlogContentUser() {
                                                     <span className="font-libre text-sm mr-2">{new Date(result.createdAt).toLocaleDateString()}</span>
                                                 </div>
                                             </div>
-                                            <div className="basis-2/4 h-32 grid content-end">
+                                            <div className="basis-2/4 h-20 grid content-end">
                                                 <Link to={`/postIdUser/${result.BlogId}`}>
                                                     <div className="text-left text-3xl font-libre font-extrabold text-darkcho hover:underline">{result.Blog.title}</div>
                                                 </Link>
