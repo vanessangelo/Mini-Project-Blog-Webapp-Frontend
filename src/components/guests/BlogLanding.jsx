@@ -21,7 +21,7 @@ export default function BlogLanding() {
 
     const handleCategory = (id) => {
         const copyFilter = { ...filter };
-        copyFilter.id_cat = id + "";
+        copyFilter.id_cat = id == "" ? "" : id + "";
         setFilter(copyFilter);
     }
 
@@ -106,7 +106,7 @@ export default function BlogLanding() {
     };
 
     // for cardbloglanding
-    const [allBlog, setAllBlog] = useState([])
+    const [allBlog, setAllBlog] = useState([]);
 
     useEffect(() => {
         Blog()
@@ -134,6 +134,9 @@ export default function BlogLanding() {
                                 </button>
                                 <div id="dropdown" className={`z-10 absolute left-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ${isDropdownOpen ? 'block' : 'hidden'}`}>
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
+                                        <li>
+                                            <button type="button" onClick={() => { handleCategory(""); closeDropdowns() }} className="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All Categories</button>
+                                        </li>
                                         {allCategory.map((result) => {
                                             return (
                                                 <li>
