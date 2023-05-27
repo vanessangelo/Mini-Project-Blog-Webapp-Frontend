@@ -24,7 +24,7 @@ export default function LogIn() {
 
   const validRgx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  const pwdRgx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[-_+=!@#$%^&])(?=.{6,})/;
+  const pwdRgx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[-_+=!@#$%^&])(?=.{6,})/;
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Please use a valid email format').required('Email is required'),
