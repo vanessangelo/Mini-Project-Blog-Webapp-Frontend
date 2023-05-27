@@ -24,14 +24,12 @@ export default function LogIn() {
 
   const validRgx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  const pwdRgx = /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[-_+=!@#$%^&])(?=.{8,})/;
+  const pwdRgx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[-_+=!@#$%^&])(?=.{6,})/;
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Please use a valid email format').required('Email is required'),
     username: Yup.string().required('Username is required'),
-    phone: Yup.number().positive("Can't start with a minus").integer(
-      "Can't include a decimal point"
-    ).required('Phone is required').matches(validRgx, "Phone number is not valid"),
+    phone: Yup.string().required('Phone is required').matches(validRgx, "Phone number is not valid"),
     password: Yup.string().matches(pwdRgx, 'At least 6 characters, 1 symbol, and 1 capital letter'
     ).required('Password is required'),
     confirmPassword: Yup.string()

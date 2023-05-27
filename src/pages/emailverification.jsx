@@ -36,11 +36,11 @@ export default function EmailVerification() {
                                     <h3>Glad to have you with us!</h3>
                                     <h3>Please log in again.</h3>
                                 </div>
-                                <Link to="/homeuser" className='m-auto grid grid-flow-row w-60 content-center'><button
+                                <Link to="/login" className='m-auto grid grid-flow-row w-60 content-center'><button
                                     className='w-full py-2 my-4 bg-olive text-ivory hover:bg-sage hover:text-black hover:font-bold'
                                     type='submit'
                                 >
-                                    Go to Home
+                                    Go to Log In
                                 </button>
                                 </Link>
                             </>
