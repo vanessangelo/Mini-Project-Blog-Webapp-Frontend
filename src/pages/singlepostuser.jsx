@@ -10,21 +10,21 @@ import { postLike } from "../store/reducer/postSlice";
 
 export default function SinglePostUser() {
     const [post, setPost] = useState([]);
-    const [ like, setLike ] = useState(false);
+    const [like, setLike] = useState(false);
     const { postIdUser } = useParams()
     const liked = useSelector((state) => state.post.data)
     const dispatch = useDispatch()
 
-    useEffect (() => {
+    useEffect(() => {
         OneBlog(postIdUser)
-        .then((res) => {
-            setPost(res.data[0])
-            const blogidLiked = liked.map((res) => (res.BlogId))
-            setLike(blogidLiked.includes(Number(postIdUser)))
-        })
-    }, [liked, postIdUser] )
+            .then((res) => {
+                setPost(res.data[0])
+                const blogidLiked = liked.map((res) => (res.BlogId))
+                setLike(blogidLiked.includes(Number(postIdUser)))
+            })
+    }, [liked, postIdUser])
 
-    if(post == []){
+    if (post == []) {
         return <p>LOADING</p>
     }
 
@@ -32,34 +32,34 @@ export default function SinglePostUser() {
 
     const navigate = useNavigate()
 
-    useEffect (() => {
+    useEffect(() => {
         const token = localStorage.getItem("token")
         if (!token) {
             navigate('/')
         }
-    })
+    }, [])
 
     //like
     const handleLike = (BlogId) => {
         console.log(BlogId)
         LikePost(token, { BlogId })
-        .then(()=> {
-            LikePostUser(localStorage.getItem("token"))
-                .then((likeResponse) => {
-                    dispatch(postLike(likeResponse.data));
-                 })
-            setLike(true)
-        })
-        .catch((err) => console.log(err))
+            .then(() => {
+                LikePostUser(localStorage.getItem("token"))
+                    .then((likeResponse) => {
+                        dispatch(postLike(likeResponse.data));
+                    })
+                setLike(true)
+            })
+            .catch((err) => console.log(err))
     }
 
     return (
         <>
-        <div className="w-screen flex content-around gap-2">
-            <div className="flex-2 sticky top-0 h-60 w-[18rem]">
-                <NavBarUser />
-            </div>
-            <div className="flex-5 w-[50rem]">
+            <div className="w-screen flex content-around gap-2">
+                <div className="flex-2 sticky top-0 h-60 w-[18rem]">
+                    <NavBarUser />
+                </div>
+                <div className="flex-5 w-[50rem]">
                     <div className="w-[48.5rem] h-fit m-auto mt-5 grid justify-center">
                         <div className="img w-[48.5rem] grid">
                             <div className="w-[46rem] h-[19rem] m-2 shadow-lg shadow-darkcho rounded-lg mx-auto">
@@ -89,10 +89,10 @@ export default function SinglePostUser() {
                             </div>
                             <div className="profpic, username, likes flex justify-between py-2">
                                 <div className="flex gap-1 justify-end px-1 pt-[1.5px]">
-                                    <div className="w-5 h-5 rounded-full overflow-hidden"> 
-                                    <img className="w-full h-full"
-                                    src={`https://minpro-blog.purwadhikabootcamp.com/${post?.User?.imgProfile}`}
-                                    alt="x" />
+                                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                                        <img className="w-full h-full"
+                                            src={`https://minpro-blog.purwadhikabootcamp.com/${post?.User?.imgProfile}`}
+                                            alt="x" />
                                     </div>
                                     <div className="font-fira text-sm text-gray-500 mx-1">
                                         {post?.User?.username}
@@ -102,26 +102,26 @@ export default function SinglePostUser() {
                                     <div>
                                         <p className="text-xs pt-1 text-darkcho font-bold"></p>
                                     </div>
-                                    <div onClick={()=>handleLike(post.id)}>
-                                        { like ? 
-                                        <i className='bx bxs-heart mr-[10px] text-darkcho' style={{color:"lightcho"}} ></i> :
-                                        <i className='bx bxs-heart mr-[10px] text-lightcho' style={{color:"lightcho"}} ></i>
+                                    <div onClick={() => handleLike(post.id)}>
+                                        {like ?
+                                            <i className='bx bxs-heart mr-[10px] text-darkcho' style={{ color: "lightcho" }} ></i> :
+                                            <i className='bx bxs-heart mr-[10px] text-lightcho' style={{ color: "lightcho" }} ></i>
                                         }
                                     </div>
                                 </div>
                             </div>
-                        <div className="content h-fit">
-                            <div className="my-4 mx-10 font-libre font-semibold indent-12 text-justify"> 
-                                {post.content}
+                            <div className="content h-fit">
+                                <div className="my-4 mx-10 font-libre font-semibold indent-12 text-justify">
+                                    {post.content}
+                                </div>
                             </div>
                         </div>
-                        </div>
                     </div>
+                </div>
+                <div className="flex-2 justify-center">
+                    <AsideContentUser />
+                </div>
             </div>
-            <div className="flex-2 justify-center">
-                <AsideContentUser/>
-            </div>
-        </div>
         </>
     )
 }

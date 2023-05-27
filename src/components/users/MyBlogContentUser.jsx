@@ -5,7 +5,8 @@ import { Link } from "react-router-dom"
 
 
 export default function MyBlogContentUser() {
-    const [myBlog, setMyBlog] = useState([])
+    const [myBlog, setMyBlog] = useState([]);
+    const [likedBlog, setLikedBlog] = useState([]);
 
     const token = useSelector((state) => state.auth.token)
 
@@ -13,6 +14,11 @@ export default function MyBlogContentUser() {
         axios.get("https://minpro-blog.purwadhikabootcamp.com/api/blog/pagUser", { headers: { Authorization: `Bearer ${token}` } })
             .then((res) => {
                 setMyBlog(res.data.result);
+            })
+
+        axios.get("https://minpro-blog.purwadhikabootcamp.com/api/blog/pagLike", { headers: { Authorization: `Bearer ${token}` } })
+            .then((res) => {
+                setLikedBlog(res.data.result);
             })
     }, [token])
 
@@ -84,6 +90,39 @@ export default function MyBlogContentUser() {
                                                 </button>
                                                 <div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                        )}
+                    </div>
+                </div>
+                <div className="w-11/12 font-monts text-xl mx-2 my-4 underline decoration-2 ml-[0.90rem]">
+                    <p>Liked Blog!</p>
+                </div>
+                <div className="mb-4 grid justify-center">
+                    <div>
+                        {likedBlog.map((result) => (
+                            <div key={result.id} className="w-[48rem] grid grid-flow-row content-center">
+                                <div className="bg-ivory w-[45rem] h-fit m-2 rounded-lg shadow-lg flex gap-2 hover:bg-white ml-[0.90rem]">
+                                    <div className="grid-flow-col content-center">
+                                    </div>
+                                    <div className="flex flex-col justify-center w-[45rem]">
+                                        <div className="grid grid-flow-row">
+                                            <div className="flex gap-2 justify-between basis-1/4">
+                                                <div className="top-[825px] w-28">
+                                                    <p className="font-fira text-left text-lg underline decoration-2 text-darkcho">{result.Blog.Category.name}</p>
+                                                </div>
+                                                <div className="p-[4px] mr-1 flex">
+                                                    <span className="font-libre text-sm mr-2">{new Date(result.createdAt).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                            <div className="basis-2/4 h-32 grid content-end">
+                                                <Link to={`/postIdUser/${result.BlogId}`}>
+                                                    <div className="text-left text-3xl font-libre font-extrabold text-darkcho hover:underline">{result.Blog.title}</div>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
