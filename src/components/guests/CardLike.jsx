@@ -2,16 +2,40 @@ import React, { useEffect, useState } from "react";
 import TopTenLikes from "../../api/topten.jsx";
 import { Link } from "react-router-dom";
 import foto from "../../assets/Untitled.jpg"
+import axios from "axios";
 
 export default function CardLike() {
     const [topLike, setTopLike] = useState([]);
 
     useEffect(() => {
-        TopTenLikes()
-            .then((response) => {
-                setTopLike(response.data.result);
-            })
-            .catch((err) => console.log(err));
+        const newData = async () => {
+            try {
+                const response = await TopTenLikes()
+                const articleImg = await Promise.all(response.data.result.map(async (result) => {
+                    const imgData = await axios.get(`https://minpro-blog.purwadhikabootcamp.com/api/blog/${result.id}`);
+                    const updatedData = {
+                        id: result.id,
+                        total_fav: result.total_fav,
+                        title: result.title,
+                        imageURL: '',
+                        category: result.Category.name,
+                    }
+
+                    if (imgData.data && imgData.data[0].imageURL) {
+                        updatedData.imageURL = `https://minpro-blog.purwadhikabootcamp.com/${imgData.data[0].imageURL}`;
+                    }
+                    return updatedData;
+                }
+                ))
+                    .catch((err) => console.log(err));
+
+                setTopLike(articleImg);
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        newData()
     }, []);
 
     return (
@@ -24,11 +48,11 @@ export default function CardLike() {
                                 <div className="grid-flow-col content-center">
                                     <div className="w-[100px] h-[150px]">
                                         <img className="w-[200px] h-[150px] object-cover rounded-tl-lg"
-                                            src={foto}
+                                            src={result.imageURL}
                                             alt="img" />
                                     </div>
                                     <div className="category py-1 bg-sage">
-                                        <p className="font-fira text-center">{result.Category.name}</p>
+                                        <p className="font-fira text-center">{result.category}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col justify-center w-[183px]">

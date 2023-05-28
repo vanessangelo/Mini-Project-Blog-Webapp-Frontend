@@ -3,16 +3,40 @@ import TopTenLikes from "../../api/topten";
 import Category from "../guests/Category";
 import foto from "../../assets/Untitled.jpg"
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function AsideContentUser() {
     const [topLike, setTopLike] = useState([]);
 
     useEffect(() => {
-        TopTenLikes()
-            .then((response) => {
-                setTopLike(response.data.result);
-            })
-            .catch((err) => console.log(err));
+        const newData = async () => {
+            try {
+                const response = await TopTenLikes()
+                const articleImg = await Promise.all(response.data.result.map(async (result) => {
+                    const imgData = await axios.get(`https://minpro-blog.purwadhikabootcamp.com/api/blog/${result.id}`);
+                    const updatedData = {
+                        id: result.id,
+                        total_fav: result.total_fav,
+                        title: result.title,
+                        imageURL: '',
+                        category: result.Category.name,
+                    }
+
+                    if (imgData.data && imgData.data[0].imageURL) {
+                        updatedData.imageURL = `https://minpro-blog.purwadhikabootcamp.com/${imgData.data[0].imageURL}`;
+                    }
+                    return updatedData;
+                }
+                ))
+                    .catch((err) => console.log(err));
+
+                setTopLike(articleImg);
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        newData()
     }, []);
 
     return (
@@ -37,7 +61,7 @@ export default function AsideContentUser() {
                                         <div className="grid-flow-col content-center">
                                             <div className="w-[100px] h-[180px]">
                                                 <img className="w-[200px] h-[180px] object-cover rounded-tl-lg rounded-bl-lg"
-                                                    src={foto}
+                                                    src={result.imageURL}
                                                     alt="img" />
                                             </div>
                                         </div>
@@ -45,7 +69,7 @@ export default function AsideContentUser() {
                                             <div className="grid grid-flow-row">
                                                 <div className="flex gap-2 justify-between basis-1/4">
                                                     <div className="top-[825px] w-28">
-                                                        <p className="font-fira text-left text-lg underline decoration-2 text-ivory">{result.Category.name}</p>
+                                                        <p className="font-fira text-left text-lg underline decoration-2 text-ivory">{result.category}</p>
                                                     </div>
                                                     <div className="p-[4px] mr-1">
                                                         <div className="w-5 h-5 rounded-full overflow-hidden">
